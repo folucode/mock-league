@@ -3,7 +3,7 @@ const User = require('../models/user');
 const auth = require('../middlewares/auth')
 const router = new express.Router();
 
-router.post('/users', async (req, res) => {
+router.post('/users/signup', async (req, res) => {
 	const user = new User(req.body);
 
 	try {
@@ -24,7 +24,7 @@ router.post('/users/login', async (req, res) => {
 		const token = await user.generateAuthToken();
 		res.send({ user, token });
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(400).send(error.message);
 	}
 });
 
