@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "env-cmd": "^10.1.0",
+    "faker": "^5.1.0",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4"
   }
