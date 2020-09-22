@@ -46,6 +46,13 @@ const userSchema = mongoose.Schema({
 	],
 });
 
+userSchema.virtual('fixtures', {
+	ref: 'Fixture',
+	localField: '_id',
+	foreignField: 'team_a',
+	foreignField: 'team_b'
+});
+
 userSchema.methods.toJSON = function () {
 	const user = this;
 	const userObject = user.toObject();
