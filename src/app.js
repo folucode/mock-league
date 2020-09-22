@@ -3,6 +3,7 @@ require('./db/mongoose');
 const userRoutes = require('./routes/user');
 const teamRoutes = require('./routes/team');
 const userSeeding = require('./seeding/users.seed');
+const teamSeeding = require('./seeding/teams.seed');
 
 const app = express();
 
@@ -12,5 +13,6 @@ app.use(userRoutes);
 app.use(teamRoutes);
 
 app.use(userSeeding);
+app.use(teamSeeding);
 
 module.exports = app;
