@@ -1,6 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const auth = require('../middlewares/auth');
+const admin = require('../../middlewares/admin');
 const router = new express.Router();
 
 router.post('/users/signup', async (req, res) => {
@@ -85,6 +86,16 @@ router.post('/users/logoutAll', auth, async (req, res) => {
 		res.send();
 	} catch (error) {
 		res.status(500).send(error.message);
+	}
+});
+
+// Admin only routes
+router.get('/users/all', auth, admin, async (req, res) => {
+	try {
+		const users = await User.find({});
+		res.send(users);
+	} catch (error) {
+		res.status(500).send(error);
 	}
 });
 
