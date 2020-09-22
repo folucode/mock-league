@@ -52,4 +52,14 @@ router.get('/teams/:id', auth, admin, async (req, res) => {
 	}
 });
 
+router.get('/teams', auth, admin, async (req, res) => {
+	try {
+		const team = await Team.find({});
+
+		res.send(team);
+	} catch (error) {
+		res.status(500).send(error.message);
+	}
+});
+
 module.exports = router;
