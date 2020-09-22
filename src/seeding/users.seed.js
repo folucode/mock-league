@@ -30,7 +30,7 @@ router.post('/users/seed', async (req, res) => {
 			users.push(newUser);
 		}
 
-		User.insertMany(users);
+		await User.insertMany(users);
 
 		res.send('Data seeding successful');
 	} catch (error) {
