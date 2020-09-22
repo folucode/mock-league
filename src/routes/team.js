@@ -62,4 +62,22 @@ router.get('/teams', auth, admin, async (req, res) => {
 	}
 });
 
+router.delete('/teams/:id/delete', auth, admin, async (req, res) => {
+	const { params } = req;
+
+	try {
+		const team = await Team.findById(params.id);
+
+		if (team) {
+			await Team.findByIdAndDelete(params.id);
+
+			res.send({ message: 'team successfully deleted', team });
+		}
+
+		res.send({ Error: 'Team not found' });
+	} catch (error) {
+		res.status(500).send(error.message);
+	}
+});
+
 module.exports = router;
