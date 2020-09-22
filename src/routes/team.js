@@ -16,7 +16,7 @@ router.post('/teams/add', auth, admin, async (req, res) => {
 	}
 });
 
-router.patch('/team/:id/update', auth, admin, async (req, res) => {
+router.patch('/teams/:id/update', auth, admin, async (req, res) => {
 	const { params, body } = req;
 
 	const updates = Object.keys(body);
@@ -31,6 +31,20 @@ router.patch('/team/:id/update', auth, admin, async (req, res) => {
 		updates.forEach((update) => (team[update] = body[update]));
 
 		await team.save();
+
+		res.send(team);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+});
+
+router.get('/teams/:id', auth, admin, async (req, res) => {
+	try {
+		const team = await Team.findById(req.params.id);
+
+		if (!team) {
+			res.status(404).send({ Error: 'Team not found' });
+		}
 
 		res.send(team);
 	} catch (error) {

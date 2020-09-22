@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const auth = require('../middlewares/auth');
-const admin = require('../../middlewares/admin');
+const admin = require('../middlewares/admin');
 const router = new express.Router();
 
 router.post('/users/signup', async (req, res) => {
