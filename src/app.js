@@ -5,6 +5,7 @@ const teamRoutes = require('./routes/team');
 const fixturesRoutes = require('./routes/fixture');
 const userSeeding = require('./seeding/users.seed');
 const teamSeeding = require('./seeding/teams.seed');
+const fixtureSeeding = require('./seeding/fixtures.seed');
 
 const app = express();
 
@@ -15,5 +16,6 @@ app.use(fixturesRoutes);
 
 app.use(userSeeding);
 app.use(teamSeeding);
+app.use(fixtureSeeding);
 
 module.exports = app;
