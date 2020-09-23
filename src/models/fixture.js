@@ -38,7 +38,7 @@ const fixtureSchema = mongoose.Schema({
 });
 
 fixtureSchema.statics.formatTeamName = (teamName) => {
-	if (teamName && teamName.includes(' ')) {
+	if (teamName.includes(' ')) {
 		const newTeamName = teamName.replace(' ', '-');
 
 		return newTeamName;
