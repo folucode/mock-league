@@ -1,6 +1,5 @@
 const express = require('express');
 const Fixture = require('../models/fixture');
-const Team = require('../models/team');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const randomstring = require('randomstring');

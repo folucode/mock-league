@@ -2,7 +2,6 @@ const express = require('express');
 const Fixture = require('../models/fixture');
 const Team = require('../models/team');
 const router = new express.Router();
-const faker = require('faker');
 const randomstring = require('randomstring');
 
 function randomDate(start, end) {
