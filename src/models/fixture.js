@@ -47,6 +47,14 @@ fixtureSchema.statics.formatTeamName = (teamName) => {
 	}
 };
 
+fixtureSchema.methods.toJSON = function() {
+	const fixture = this;
+
+	const fixtureObject = fixture.toObject();
+
+	delete 
+}
+
 const Fixture = mongoose.model('Fixture', fixtureSchema);
 
 module.exports = Fixture;

@@ -2,7 +2,7 @@ const express = require('express');
 const Fixture = require('../models/fixture');
 const Team = require('../models/team');
 const router = new express.Router();
-const randomstring = require('randomstring');
+const { uuid } = require('uuidv4');
 
 function randomDate(start, end) {
 	return new Date(
@@ -25,11 +25,6 @@ router.post('/fixtures/seed', async (req, res) => {
 		}
 
 		for (let i = 0; i < teamNames.length - 1; i++) {
-			const fixture_id = randomstring.generate({
-				length: 15,
-				charset: 'alphanumeric',
-			});
-
 			const team_a = teamNames[i];
 			const team_b = teamNames[i + 1];
 			const date = randomDate(new Date(2020, 0, 10), new Date(2020, 10, 10));
@@ -38,6 +33,8 @@ router.post('/fixtures/seed', async (req, res) => {
 			const team_a_formatted = Fixture.formatTeamName(team_a);
 			const team_b_formatted = Fixture.formatTeamName(team_b);
 
+      const fixture_id = uuid();
+      
 			const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
 
 			const computedFixture = {

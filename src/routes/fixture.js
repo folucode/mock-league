@@ -2,7 +2,7 @@ const express = require('express');
 const Fixture = require('../models/fixture');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
-const randomstring = require('randomstring');
+const { uuid } = require('uuidv4');
 const router = new express.Router();
 
 router.post('/fixtures/new', auth, admin, async (req, res) => {
@@ -12,10 +12,7 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 		const team_a_formatted = Fixture.formatTeamName(team_a);
 		const team_b_formatted = Fixture.formatTeamName(team_b);
 
-		const fixture_id = randomstring.generate({
-			length: 15,
-			charset: 'alphanumeric',
-		});
+		const fixture_id = uuid();
 
 		const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
 
@@ -38,22 +35,17 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 	}
 });
 
-router.get('/fixtures/:id', auth, async (req, res) => {
+router.get('/fixtures/:fixture/:id', auth, async (req, res) => {
 	const { params } = req;
 
 	try {
-		const fixture = await Fixture.findById(params.id);
+		const fixture = await Fixture.where({ fixture_id: params.id }).findOne();
 
-		const { team_a, team_b, date, status } = fixture;
+		if (!fixture) {
+			return res.status(400).send({ Error: 'Fixture not found' });
+		}
 
-		const parsedFixture = {
-			home_team: home_team.fullname,
-			away_team: away_team.fullname,
-			date,
-			status,
-		};
-
-		res.send(parsedFixture);
+		res.send(fixture);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
