@@ -2,7 +2,7 @@ const express = require('express');
 const Fixture = require('../models/fixture');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
-const { uuid } = require('uuidv4');
+const { v4: uuid_v4 } = require('uuid');
 const router = new express.Router();
 
 router.post('/fixtures/new', auth, admin, async (req, res) => {
@@ -12,7 +12,7 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 		const team_a_formatted = Fixture.formatTeamName(team_a);
 		const team_b_formatted = Fixture.formatTeamName(team_b);
 
-		const fixture_id = uuid();
+		const fixture_id = uuid_v4();
 
 		const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
 
@@ -46,6 +46,22 @@ router.get('/fixtures/:fixture/:id', auth, async (req, res) => {
 		}
 
 		res.send(fixture);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+});
+
+router.get('/fixtures/:status', auth, async (req, res) => {
+	const { params } = req;
+
+	try {
+		const fixtures = await Fixture.where({ status: params.status }).find();
+
+		if (!fixtures) {
+			return res.status(400).send({ Error: 'Fixture not found' });
+		}
+
+		res.send(fixtures);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
