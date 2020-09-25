@@ -14,7 +14,7 @@ router.post('/fixtures/seed', async (req, res) => {
 	try {
 		const team = await Team.find({});
 
-		const statusList = ['pending', 'ongoing', 'played'];
+		const statusList = ['pending', 'ongoing', 'completed'];
 
 		const teamNames = [];
 
