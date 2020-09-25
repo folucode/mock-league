@@ -58,7 +58,7 @@ router.get('/fixtures/:status', auth, async (req, res) => {
 		const fixtures = await Fixture.where({ status: params.status }).find();
 
 		if (!fixtures) {
-			return res.status(400).send({ Error: 'Fixture not found' });
+			return res.status(400).send({ Error: `No ${params.status} Fixtures` });
 		}
 
 		res.send(fixtures);
