@@ -37,9 +37,11 @@ router.post('/fixtures/seed', async (req, res) => {
 			const team_a_formatted = Fixture.formatTeamName(team_a);
 			const team_b_formatted = Fixture.formatTeamName(team_b);
 
-      const fixture_id = uuidv4();
-      
+			const fixture_id = uuidv4();
+
 			const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
+
+			let objectID = uuidv4();
 
 			const computedFixture = {
 				team_a,
@@ -48,18 +50,19 @@ router.post('/fixtures/seed', async (req, res) => {
 				status,
 				link,
 				fixture_id,
+				objectID,
 			};
 
 			fixtures.push(computedFixture);
 		}
 
+		await Fixture.insertMany(fixtures);
+
 		await fixtureIndex.saveObjects(fixtures, {
 			autoGenerateObjectIDIfNotExist: true,
 		});
 
-		await Fixture.insertMany(fixtures);
-
-		res.send(fixtures);
+		res.send({ response: 'Data seeding successful', fixtures });
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
