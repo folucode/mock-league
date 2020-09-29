@@ -38,8 +38,8 @@ router.patch('/users/me', auth, async (req, res) => {
 
 	const updates = Object.keys(body);
 	const allowedUpdates = ['name', 'email', 'password'];
-	const isValidOperation = updates.every((update) =>
-		allowedUpdates.includes(update),
+	const isValidOperation = updates.every((update, index) =>
+		allowedUpdates.includes(update)
 	);
 
 	if (!isValidOperation) {

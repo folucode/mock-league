@@ -35,6 +35,34 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 	}
 });
 
+router.patch('/fixtures/:id/update', auth, admin, async (req, res) => {
+	const { params, body } = req;
+
+	const updates = Object.keys(body);
+	const allowedUpdates = ['name', 'email', 'password'];
+	const isValidOperation = updates.every((update) =>
+		allowedUpdates.includes(update)
+	);
+
+	if (!isValidOperation) {
+		return res.status(400).send({ error: 'Invalid updates!' });
+	}
+
+	try {
+		const fixture = await Fixture.where({ _id: params.id }).findOne();
+
+		if (!fixture) {
+			res.status(404).send({ Error: 'Fixture not found' });
+		}
+
+		updates.forEach((update) => (fixture[update] = body[update]));
+
+		res.send(fixture);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+});
+
 router.get('/fixtures/:fixture/:id', auth, async (req, res) => {
 	const { params } = req;
 
