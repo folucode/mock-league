@@ -57,6 +57,10 @@ router.patch('/users/me', auth, async (req, res) => {
 
 		await user.save();
 
+		await userIndex.partialUpdateObject(user).then(({ objectID }) => {
+			console.log(objectID);
+		});
+
 		if (!user) {
 			return res.status(404).send();
 		}
