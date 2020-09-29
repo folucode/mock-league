@@ -3,6 +3,10 @@ const Team = require('../models/team');
 const router = new express.Router();
 const faker = require('faker');
 
+const algoliaclient = require('../search/algolia');
+
+const teamIndex = algoliaclient.initIndex('teams');
+
 router.post('/teams/seed', async (req, res) => {
 	try {
 		let teams = [];
@@ -21,6 +25,10 @@ router.post('/teams/seed', async (req, res) => {
 
 			teams.push(newTeam);
 		}
+
+		await teamIndex.saveObjects(teams, {
+			autoGenerateObjectIDIfNotExist: true,
+		});
 
 		await Team.insertMany(teams);
 
