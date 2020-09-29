@@ -45,11 +45,11 @@ router.post('/users/seed', async (req, res) => {
 			users.push(newUser);
 		}
 
+		await User.insertMany(users);
+
 		await userIndex.saveObjects(users, {
 			autoGenerateObjectIDIfNotExist: true,
 		});
-
-		await User.insertMany(users);
 
 		res.send(users);
 	} catch (error) {
