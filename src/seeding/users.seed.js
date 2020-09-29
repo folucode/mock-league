@@ -4,6 +4,7 @@ const router = new express.Router();
 const bcrypt = require('bcryptjs');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
 const algoliaclient = require('../search/algolia');
 
@@ -13,7 +14,7 @@ router.post('/users/seed', async (req, res) => {
 	try {
 		let users = [];
 
-		for (let index = 0; index <= 100; index++) {
+		for (let index = 0; index < 100; index++) {
 			user = new User();
 
 			role = ['user', 'admin'];
@@ -27,6 +28,7 @@ router.post('/users/seed', async (req, res) => {
 
 			let name = faker.name.findName();
 			let email = faker.internet.email(name).toLowerCase();
+			let objectID = uuidv4();
 
 			let newUser = {
 				_id: user._id,
@@ -37,7 +39,7 @@ router.post('/users/seed', async (req, res) => {
 				tokens: user.tokens.concat({
 					token,
 				}),
-				objectID: user._id,
+				objectID,
 			};
 
 			users.push(newUser);

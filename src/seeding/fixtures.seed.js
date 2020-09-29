@@ -2,7 +2,7 @@ const express = require('express');
 const Fixture = require('../models/fixture');
 const Team = require('../models/team');
 const router = new express.Router();
-const { uuid } = require('uuidv4');
+const { v4: uuidv4 } = require('uuid');
 
 const algoliaclient = require('../search/algolia');
 
@@ -37,7 +37,7 @@ router.post('/fixtures/seed', async (req, res) => {
 			const team_a_formatted = Fixture.formatTeamName(team_a);
 			const team_b_formatted = Fixture.formatTeamName(team_b);
 
-      const fixture_id = uuid();
+      const fixture_id = uuidv4();
       
 			const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
 
