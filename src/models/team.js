@@ -17,6 +17,10 @@ const teamSchema = mongoose.Schema({
 		required: true,
 		trim: true,
 	},
+	objectID: {
+		type: String,
+		required: true,
+	},
 	founded: {
 		type: Number,
 		required: true,
