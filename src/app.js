@@ -7,12 +7,15 @@ const userSeeding = require('./seeding/users.seed');
 const teamSeeding = require('./seeding/teams.seed');
 const fixtureSeeding = require('./seeding/fixtures.seed');
 
+const searchRoute = require('./routes/search');
+
 const app = express();
 
 app.use(express.json());
 app.use(userRoutes);
 app.use(teamRoutes);
 app.use(fixturesRoutes);
+app.use(searchRoute);
 
 app.use(userSeeding);
 app.use(teamSeeding);
