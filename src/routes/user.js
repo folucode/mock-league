@@ -3,17 +3,23 @@ const User = require('../models/user');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const router = new express.Router();
+const algoliaclient = require('../search/algolia');
+
+const userIndex = algoliaclient.initIndex('users');
 
 router.post('/users/signup', async (req, res) => {
 	const user = new User(req.body);
 
 	try {
 		await user.save();
+		await userIndex.saveObject(user, {
+			autoGenerateObjectIDIfNotExist: true,
+		});
 		const token = await user.generateAuthToken();
 
 		res.status(201).send({ user, token });
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(400).send(error.message);
 	}
 });
 

@@ -5,6 +5,10 @@ const bcrypt = require('bcryptjs');
 const faker = require('faker');
 const jwt = require('jsonwebtoken');
 
+const algoliaclient = require('../search/algolia');
+
+const userIndex = algoliaclient.initIndex('users');
+
 router.post('/users/seed', async (req, res) => {
 	try {
 		let users = [];
@@ -14,7 +18,12 @@ router.post('/users/seed', async (req, res) => {
 
 			role = ['user', 'admin'];
 
-			token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET);
+			token = jwt.sign(
+				{
+					_id: user._id.toString(),
+				},
+				process.env.JWT_SECRET,
+			);
 
 			let name = faker.name.findName();
 			let email = faker.internet.email(name).toLowerCase();
@@ -24,11 +33,17 @@ router.post('/users/seed', async (req, res) => {
 				email,
 				password: await bcrypt.hash('Yx52RKRB!', 8),
 				role: role[Math.floor(Math.random() * Math.floor(2))],
-				tokens: user.tokens.concat({ token }),
+				tokens: user.tokens.concat({
+					token,
+				}),
 			};
 
 			users.push(newUser);
 		}
+
+		await userIndex.saveObjects(users, {
+			autoGenerateObjectIDIfNotExist: true,
+		});
 
 		await User.insertMany(users);
 
