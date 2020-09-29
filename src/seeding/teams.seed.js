@@ -13,6 +13,8 @@ router.post('/teams/seed', async (req, res) => {
 
 		for (let index = 0; index < 100; index++) {
 
+			
+
 			let fullname = faker.lorem.words(2);
 			let short_name = `${fullname.charAt(0).toUpperCase()}FC`;
 

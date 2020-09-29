@@ -4,6 +4,10 @@ const Team = require('../models/team');
 const router = new express.Router();
 const { uuid } = require('uuidv4');
 
+const algoliaclient = require('../search/algolia');
+
+const fixtureIndex = algoliaclient.initIndex('fixtures');
+
 function randomDate(start, end) {
 	return new Date(
 		start.getTime() + Math.random() * (end.getTime() - start.getTime()),
@@ -48,6 +52,10 @@ router.post('/fixtures/seed', async (req, res) => {
 
 			fixtures.push(computedFixture);
 		}
+
+		await fixtureIndex.saveObjects(fixtures, {
+			autoGenerateObjectIDIfNotExist: true,
+		});
 
 		await Fixture.insertMany(fixtures);
 

@@ -29,6 +29,7 @@ router.post('/users/seed', async (req, res) => {
 			let email = faker.internet.email(name).toLowerCase();
 
 			let newUser = {
+				_id: user._id,
 				name,
 				email,
 				password: await bcrypt.hash('Yx52RKRB!', 8),
@@ -36,6 +37,7 @@ router.post('/users/seed', async (req, res) => {
 				tokens: user.tokens.concat({
 					token,
 				}),
+				objectID: user._id,
 			};
 
 			users.push(newUser);
@@ -47,7 +49,7 @@ router.post('/users/seed', async (req, res) => {
 
 		await User.insertMany(users);
 
-		res.send('Data seeding successful');
+		res.send(users);
 	} catch (error) {
 		res.status(400).send(error.message);
 	}

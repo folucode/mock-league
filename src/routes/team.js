@@ -4,11 +4,18 @@ const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const router = new express.Router();
 
+const algoliaclient = require('../search/algolia');
+
+const teamIndex = algoliaclient.initIndex('teams');
+
 router.post('/teams/add', auth, admin, async (req, res) => {
 	const team = new Team(req.body);
 
 	try {
 		await team.save();
+		await teamIndex.saveObjects(team, {
+			autoGenerateObjectIDIfNotExist: true,
+		});
 
 		res.status(201).send(team);
 	} catch (error) {
@@ -29,6 +36,8 @@ router.patch('/teams/:id/update', auth, admin, async (req, res) => {
 		}
 
 		updates.forEach((update) => (team[update] = body[update]));
+
+		teamIndex.partialUpdateObject(team);
 
 		await team.save();
 
