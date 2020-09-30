@@ -5,6 +5,10 @@ const admin = require('../middlewares/admin');
 const { v4: uuid_v4 } = require('uuid');
 const router = new express.Router();
 
+const algoliaclient = require('../search/algolia');
+
+const fixtureIndex = algoliaclient.initIndex('fixtures');
+
 router.post('/fixtures/new', auth, admin, async (req, res) => {
 	const { team_a, team_b, date, status } = req.body;
 
@@ -13,6 +17,8 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 		const team_b_formatted = Fixture.formatTeamName(team_b);
 
 		const fixture_id = uuid_v4();
+
+		const objectID = uuid_v4();
 
 		const link = `/fixtures/${team_a_formatted}-v-${team_b_formatted}/${fixture_id}`;
 
@@ -23,11 +29,14 @@ router.post('/fixtures/new', auth, admin, async (req, res) => {
 			status,
 			link,
 			fixture_id,
+			objectID,
 		};
 
 		const fixture = new Fixture(computedFixture);
 
 		await fixture.save();
+
+		await fixtureIndex.saveObject(fixture);
 
 		res.status(201).send(fixture);
 	} catch (error) {
@@ -39,9 +48,9 @@ router.patch('/fixtures/:id/update', auth, admin, async (req, res) => {
 	const { params, body } = req;
 
 	const updates = Object.keys(body);
-	const allowedUpdates = ['name', 'email', 'password'];
+	const allowedUpdates = ['status', 'team_a', 'team_b'];
 	const isValidOperation = updates.every((update) =>
-		allowedUpdates.includes(update)
+		allowedUpdates.includes(update),
 	);
 
 	if (!isValidOperation) {
@@ -49,13 +58,17 @@ router.patch('/fixtures/:id/update', auth, admin, async (req, res) => {
 	}
 
 	try {
-		const fixture = await Fixture.where({ _id: params.id }).findOne();
+		const fixture = await Fixture.findById(params.id);
 
 		if (!fixture) {
 			res.status(404).send({ Error: 'Fixture not found' });
 		}
 
 		updates.forEach((update) => (fixture[update] = body[update]));
+
+		await fixture.save();
+
+		await fixtureIndex.partialUpdateObject(fixture);
 
 		res.send(fixture);
 	} catch (error) {
@@ -90,6 +103,26 @@ router.get('/fixtures/:status', auth, async (req, res) => {
 		}
 
 		res.send(fixtures);
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
+});
+
+router.delete('/fixtures/:id/delete', auth, admin, async (req, res) => {
+	const { params } = req;
+
+	try {
+		const fixture = await Fixture.findById(params.id);
+
+		if (fixture) {
+			await Fixture.findByIdAndDelete(params.id);
+
+			await fixtureIndex.deleteObject(fixture.objectID);
+
+			res.send({ message: 'Fixture successfully deleted', fixture });
+		}
+
+		res.send({ Error: 'Fixture not found' });
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
