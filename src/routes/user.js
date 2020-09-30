@@ -4,6 +4,7 @@ const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const router = new express.Router();
 const algoliaclient = require('../search/algolia');
+const { v4: uuid_v4 } = require('uuid');
 
 const userIndex = algoliaclient.initIndex('users');
 
@@ -11,10 +12,15 @@ router.post('/users/signup', async (req, res) => {
 	const user = new User(req.body);
 
 	try {
+		const objectID = uuid_v4();
+
+		Object.assign(user, { objectID });
+
 		await user.save();
 		await userIndex.saveObject(user, {
 			autoGenerateObjectIDIfNotExist: true,
 		});
+
 		const token = await user.generateAuthToken();
 
 		res.status(201).send({ user, token });
@@ -45,7 +51,7 @@ router.patch('/users/me', auth, async (req, res) => {
 	const updates = Object.keys(body);
 	const allowedUpdates = ['name', 'email', 'password'];
 	const isValidOperation = updates.every((update, index) =>
-		allowedUpdates.includes(update)
+		allowedUpdates.includes(update),
 	);
 
 	if (!isValidOperation) {
