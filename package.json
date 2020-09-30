@@ -1,28 +1,29 @@
 {
-  "name": "mock-league",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "dev": "env-cmd -f ./config/dev.env nodemon src/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "algoliasearch": "^4.5.1",
-    "bcryptjs": "^2.4.3",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongodb": "^3.6.2",
-    "mongoose": "^5.10.5",
-    "uuid": "^8.3.0",
-    "validator": "^13.1.1"
-  },
-  "devDependencies": {
-    "env-cmd": "^10.1.0",
-    "faker": "^5.1.0",
-    "jest": "^26.4.2",
-    "nodemon": "^2.0.4"
-  }
+	"name": "mock-league",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "env-cmd -f ./config/dev.env nodemon src/index.js",
+		"test": "jest"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"algoliasearch": "^4.5.1",
+		"bcryptjs": "^2.4.3",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"mongodb": "^3.6.2",
+		"mongoose": "^5.10.5",
+		"uuid": "^8.3.0",
+		"validator": "^13.1.1"
+	},
+	"devDependencies": {
+		"env-cmd": "^10.1.0",
+		"faker": "^5.1.0",
+		"jest": "^26.4.2",
+		"nodemon": "^2.0.4"
+	}
 }
