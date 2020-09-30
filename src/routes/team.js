@@ -3,6 +3,7 @@ const Team = require('../models/team');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 const router = new express.Router();
+const { v4: uuid_v4 } = require('uuid');
 
 const algoliaclient = require('../search/algolia');
 
@@ -12,10 +13,13 @@ router.post('/teams/add', auth, admin, async (req, res) => {
 	const team = new Team(req.body);
 
 	try {
+		const objectID = uuid_v4();
+
+		Object.assign(team, { objectID });
+
 		await team.save();
-		await teamIndex.saveObjects(team, {
-			autoGenerateObjectIDIfNotExist: true,
-		});
+
+		await teamIndex.saveObject(team);
 
 		res.status(201).send(team);
 	} catch (error) {
@@ -37,9 +41,9 @@ router.patch('/teams/:id/update', auth, admin, async (req, res) => {
 
 		updates.forEach((update) => (team[update] = body[update]));
 
-		teamIndex.partialUpdateObject(team);
-
 		await team.save();
+
+		await teamIndex.partialUpdateObject(team);
 
 		res.send(team);
 	} catch (error) {
@@ -79,6 +83,8 @@ router.delete('/teams/:id/delete', auth, admin, async (req, res) => {
 
 		if (team) {
 			await Team.findByIdAndDelete(params.id);
+
+			await teamIndex.deleteObject(team.objectID);
 
 			res.send({ message: 'team successfully deleted', team });
 		}
