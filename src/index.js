@@ -1,5 +1,5 @@
-const { redisClient } = require("./db/redis");
-const app = require("./app");
+const { app } = require("./app");
+const { redisClient } = require("./app");
 
 const port = process.env.PORT;
 

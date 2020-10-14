@@ -9,9 +9,10 @@ const userSeeding = require("./seeding/users.seed");
 const teamSeeding = require("./seeding/teams.seed");
 const fixtureSeeding = require("./seeding/fixtures.seed");
 
-// const { v4: uuid_v4 } = require("uuid");
+const { v4: uuid_v4 } = require("uuid");
 
 const searchRoute = require("./routes/search");
+const redisClient = require("./db/redis");
 
 const app = express();
 
@@ -43,4 +44,7 @@ app.use(userSeeding);
 app.use(teamSeeding);
 app.use(fixtureSeeding);
 
-module.exports = app;
+module.exports = {
+  app,
+  redisClient,
+};
