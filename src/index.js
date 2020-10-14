@@ -1,9 +1,9 @@
-const { app } = require("./app");
-const { client } = require("./app");
+const { redisClient } = require("./db/redis");
+const app = require("./app");
 
 const port = process.env.PORT;
 
-client.on("connect", function () {
+redisClient.on("connect", function () {
   console.log(`Redis Client running`);
 });
 
