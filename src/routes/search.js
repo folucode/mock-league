@@ -1,28 +1,34 @@
-const express = require('express');
+const express = require("express");
+const redisClient = require("../db/redis");
+const checkCache = require("../middlewares/checkCache");
 const router = new express.Router();
-const algoliaclient = require('../search/algolia');
+const algoliaclient = require("../search/algolia");
 
-router.get('/search/:query', async (req, res) => {
-	const { query } = req.params;
+router.get("/search/:query", async (req, res) => {
+  const { query } = req.params;
 
-	try {
-		const queries = [
-			{
-				indexName: 'teams',
-				query,
-			},
-			{
-				indexName: 'fixtures',
-				query,
-			},
-		];
+  checkCache(query);
 
-		const results = await algoliaclient.multipleQueries(queries);
+  try {
+    const queries = [
+      {
+        indexName: "teams",
+        query,
+      },
+      {
+        indexName: "fixtures",
+        query,
+      },
+    ];
 
-		res.send(results);
-	} catch (error) {
-		res.status(400).send(error.message);
-	}
+    const results = await algoliaclient.multipleQueries(queries);
+
+    redisClient.setex(query, 3600, JSON.stringify(results));
+
+    res.send(results);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
 });
 
 module.exports = router;
