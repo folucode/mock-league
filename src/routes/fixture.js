@@ -70,7 +70,13 @@ router.patch("/fixtures/:id/update", auth, admin, async (req, res) => {
 
     await fixture.save();
 
-    await fixtureIndex.partialUpdateObject(fixture);
+	await fixtureIndex.partialUpdateObject(fixture);
+
+	let checkKey = await redisClient.getAsync(params.id)
+
+	if(checkKey) {
+		redisClient.setex(params.id, 3600, JSON.stringify(fixture));
+	}
 
     res.send(fixture);
   } catch (error) {

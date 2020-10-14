@@ -11,6 +11,7 @@ function checkCache(param) {
       if (data !== null) {
         res.send(JSON.parse(data));
       } else {
+        console.log('no');
         next();
       }
     });
