@@ -47,7 +47,11 @@ router.patch("/teams/:id/update", auth, admin, async (req, res) => {
 
     await teamIndex.partialUpdateObject(team);
 
-    redisClient.setex(params.id.toString(), 3600, JSON.stringify(team));
+    let checkKey = await redisClient.getAsync(params.id)
+
+	if(checkKey) {
+		redisClient.setex(params.id, 3600, JSON.stringify(team));
+	}
 
     res.send(team);
   } catch (error) {

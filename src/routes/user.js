@@ -5,6 +5,8 @@ const admin = require("../middlewares/admin");
 const router = new express.Router();
 const algoliaclient = require("../search/algolia");
 const { v4: uuid_v4 } = require("uuid");
+const redisClient = require("../db/redis");
+const checkCache = require("../middlewares/checkCache");
 
 const userIndex = algoliaclient.initIndex("users");
 
@@ -106,8 +108,12 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 
 // Admin only routes
 router.get("/users/all", auth, admin, async (req, res) => {
+  checkCache("all_users");
+
   try {
     const users = await User.find({});
+
+    redisClient.setex("all_users", 3600, JSON.stringify(users));
     res.send(users);
   } catch (error) {
     res.status(500).send(error.message);
