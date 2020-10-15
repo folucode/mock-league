@@ -19,7 +19,7 @@ router.get("/search/:query", async (req, res) => {
         indexName: "fixtures",
         query,
       },
-    ];
+	];
 
     const results = await algoliaclient.multipleQueries(queries);
 

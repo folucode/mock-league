@@ -38,6 +38,8 @@ router.post("/users/login", async (req, res) => {
     const user = await User.findByCredentials(email, password);
     const token = await user.generateAuthToken();
 
+    req.session.key = user;
+
     res.send({ user, token });
   } catch (error) {
     res.status(400).send(error.message);
@@ -85,6 +87,13 @@ router.post("/users/logout", auth, async (req, res) => {
     req.user.tokens = tokens.filter((token) => {
       return token.token !== req.token;
     });
+
+    if (req.session.id) {
+      redisClient.del(`sess:${req.session.id}`);
+      req.session.destroy(function (err) {
+        console.log("done");
+      });
+    }
 
     await req.user.save();
 

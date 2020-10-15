@@ -1,7 +1,7 @@
 const express = require("express");
 require("./db/mongoose");
-// const session = require("express-session");
-// const redisStore = require("connect-redis")(session);
+const session = require("express-session");
+const redisStore = require("connect-redis")(session);
 const userRoutes = require("./routes/user");
 const teamRoutes = require("./routes/team");
 const fixturesRoutes = require("./routes/fixture");
@@ -24,22 +24,23 @@ const limiter = rateLimit({
   max: 100
 });
  
-// app.use(
-//   session({
-//     genid: (req) => {
-//       return uuid_v4();
-//     },
-//     name: "_redis",
-//     secret: "Yx52RKRB!",
-//     store: new redisStore({
-//       client: redisClient,
-//       ttl: 260,
-//     }),
-//     cookie: { httpOnly: true, secure: true, sameSite: true, maxAge: 600000 },
-//     saveUninitialized: true,
-//     resave: false,
-//   })
-// );
+app.use(
+  session({
+    genid: (req) => {
+      return uuid_v4();
+    },
+    name: "_redis",
+    secret: process.env.JWT_SECRET,
+    store: new redisStore({
+      client: redisClient,
+      ttl: 260,
+    }),
+    cookie: { httpOnly: true, secure: false, sameSite: true, maxAge: 600000 },
+    saveUninitialized: true,
+    resave: false,
+  })
+);
+
 app.use(limiter);
 
 app.use(userRoutes);
