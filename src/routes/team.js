@@ -47,11 +47,11 @@ router.patch("/teams/:id/update", auth, admin, async (req, res) => {
 
     await teamIndex.partialUpdateObject(team);
 
-    let checkKey = await redisClient.getAsync(params.id)
+    let checkKey = await redisClient.getAsync(params.id);
 
-	if(checkKey) {
-		redisClient.setex(params.id, 3600, JSON.stringify(team));
-	}
+    if (checkKey) {
+      redisClient.setex(params.id, 3600, JSON.stringify(team));
+    }
 
     res.send(team);
   } catch (error) {
@@ -105,6 +105,8 @@ router.delete("/teams/:id/delete", auth, admin, async (req, res) => {
       await teamIndex.deleteObject(team.objectID);
 
       res.send({ message: "team successfully deleted", team });
+
+      return;
     }
 
     res.send({ Error: "Team not found" });

@@ -79,9 +79,9 @@ test("Should delete fixture", async () => {
 });
 
 test("Should not delete fixture", async () => {
-    await request(app)
-      .delete(`/fixtures/${id_three}/delete`)
-      .set("Authorization", `Bearer ${regularUser.tokens[0].token}`)
-      .send()
-      .expect(404);
-  });
+  await request(app)
+    .delete(`/fixtures/${id_three}/delete`)
+    .set("Authorization", `Bearer ${regularUser.tokens[0].token}`)
+    .send()
+    .expect(404);
+});
