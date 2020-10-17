@@ -90,9 +90,7 @@ router.post("/users/logout", auth, async (req, res) => {
 
     if (req.session.id) {
       redisClient.del(`sess:${req.session.id}`);
-      req.session.destroy(function (err) {
-        console.log("done");
-      });
+      req.session.destroy();
     }
 
     await req.user.save();
