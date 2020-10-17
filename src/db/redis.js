@@ -3,6 +3,6 @@ const redis = require("redis");
 
 Bluebird.promisifyAll(redis);
 
-const redisClient = redis.createClient(6379, "localhost");
+const redisClient = redis.createClient(process.env.REDIS_URL);
 
 module.exports = redisClient;
