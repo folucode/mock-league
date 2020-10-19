@@ -9,6 +9,16 @@ This project is an api that serves up fixtures of matches in a **“Mock Premier
 This API has the features listed below:
 
 1. Signup/Login users
-1. fictional team created
+1. fictional teams created
 1. fixtures between teams
 1. Robust search engine for searching teams and fixtures
+
+## Tools/Stack Used
+
+1. JavaScript/NodeJS - languages used
+1. MongoDB - database used to store all the information in this api
+1. Express - a NodeJS framework for creating APIs
+1. Redis - used for session management and API data caching
+1. JWT - used for authentication and authorization
+1. Jest - used for testing
+1. POSTMAN - used for documentation the API
