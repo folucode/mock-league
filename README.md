@@ -23,7 +23,7 @@ This API has the features listed below:
 1. Redis - used for session management and API data caching
 1. JWT - used for authentication and authorization
 1. Jest - used for testing
-1. POSTMAN - used for documentation the API
+1. POSTMAN - used for documenting the API
 
 ## TODO
 
