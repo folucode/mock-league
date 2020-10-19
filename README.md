@@ -2,7 +2,7 @@
 
 ## Description
 
-This project is an api that serves up fixtures of matches in a **“Mock Premier League”**, it is a curation of fictional teams and fixtures between them. You could compare it to being a fictional league.
+This project is an api that serves up fixtures of matches in a **“Mock Premier League”**, it is a curation of fictional teams and fixtures between them. You could compare it to being a fictional league and you can access the API with this [link](https://mock-league-api.herokuapp.com/ "Mock League API").
 
 ## API features
 
