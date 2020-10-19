@@ -6,6 +6,8 @@ This project is an api that serves up fixtures of matches in a **“Mock Premier
 
 You could compare it to being a fictional league and you can access the API with this [link](https://mock-league-api.herokuapp.com/ "Mock League API").
 
+Documentation can be foound [here](https://documenter.getpostman.com/view/4848709/TVYAffgb)
+
 ## API features
 
 This API has the features listed below:
