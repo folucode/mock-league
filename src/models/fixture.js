@@ -55,9 +55,7 @@ fixtureSchema.methods.toJSON = function () {
 	const fixture = this;
 
 	const fixtureObject = fixture.toObject();
-
-	delete fixtureObject.fixture_id
-	delete fixtureObject._id
+	
 	delete fixtureObject.__v
 
 	return fixtureObject;
