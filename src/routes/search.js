@@ -19,15 +19,19 @@ router.get("/search/:query", async (req, res) => {
         indexName: "fixtures",
         query,
       },
-	];
+    ];
 
     const results = await algoliaclient.multipleQueries(queries);
 
     redisClient.setex(query, 3600, JSON.stringify(results));
 
-    res.send(results);
+    res.send({
+      message: "Fetched search results",
+      data: results,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 

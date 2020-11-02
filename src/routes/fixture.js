@@ -40,9 +40,13 @@ router.post("/fixtures/new", auth, admin, async (req, res) => {
 
     await fixtureIndex.saveObject(fixture);
 
-    res.status(201).send(fixture);
+    res.status(201).send({
+      message: "Fixture successfully created",
+      data: fixture,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -78,9 +82,13 @@ router.patch("/fixtures/:id/update", auth, admin, async (req, res) => {
       redisClient.setex(params.id, 3600, JSON.stringify(fixture));
     }
 
-    res.send(fixture);
+    res.send({
+      message: "Fixture successfully updated",
+      data: fixture,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -93,14 +101,18 @@ router.get("/fixtures/:id", auth, async (req, res) => {
     const fixture = await Fixture.where({ fixture_id: params.id }).findOne();
 
     if (!fixture) {
-      return res.status(400).send({ Error: "Fixture not found" });
+      return res.status(400).send({ message: "Fixture not found" });
     }
 
     redisClient.setex(params.id, 3600, JSON.stringify(fixture));
 
-    res.send(fixture);
+    res.send({
+      message: "Fixture successfully retrieved",
+      data: fixture,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -113,14 +125,18 @@ router.get("/fixtures/:status", auth, async (req, res) => {
     const fixtures = await Fixture.where({ status: params.status }).find();
 
     if (!fixtures) {
-      return res.status(400).send({ Error: `No ${params.status} Fixtures` });
+      return res.status(400).send({ message: `No ${params.status} Fixtures` });
     }
 
     redisClient.setex(params.status, 3600, JSON.stringify(fixtures));
 
-    res.send(fixtures);
+    res.send({
+      message: "Fixture successfully retrieved",
+      data: fixture,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -135,14 +151,18 @@ router.delete("/fixtures/:id/delete", auth, admin, async (req, res) => {
 
       await fixtureIndex.deleteObject(fixture.objectID);
 
-      res.send({ message: "Fixture successfully deleted", fixture });
+      res.send({
+        message: "Fixture successfully deleted",
+        data: fixture,
+        success: true,
+      });
 
       return;
     }
 
-    res.send({ Error: "Fixture not found" });
+    res.send({ message: "Fixture not found" });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 

@@ -23,9 +23,11 @@ router.post("/teams/add", auth, admin, async (req, res) => {
 
     await teamIndex.saveObject(team);
 
-    res.status(201).send(team);
+    res
+      .status(201)
+      .send({ message: "Team added sucessfully", data: team, success: true });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -53,9 +55,13 @@ router.patch("/teams/:id/update", auth, admin, async (req, res) => {
       redisClient.setex(params.id, 3600, JSON.stringify(team));
     }
 
-    res.send(team);
+    res.send({
+      message: "Team updated sucessfully",
+      data: team,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -73,9 +79,13 @@ router.get("/teams/:id", auth, admin, async (req, res) => {
 
     redisClient.setex(params.id.toString(), 3600, JSON.stringify(team));
 
-    res.send(team);
+    res.send({
+      message: "Team retrieved sucessfully",
+      data: team,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -87,9 +97,13 @@ router.get("/teams", auth, admin, async (req, res) => {
 
     redisClient.setex("all_teams", 3600, JSON.stringify(teams));
 
-    res.send(teams);
+    res.send({
+      message: "all teams retrieved sucessfully",
+      data: team,
+      success: true,
+    });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
@@ -104,14 +118,18 @@ router.delete("/teams/:id/delete", auth, admin, async (req, res) => {
 
       await teamIndex.deleteObject(team.objectID);
 
-      res.send({ message: "team successfully deleted", team });
+      res.send({
+        message: "team successfully deleted",
+        data: team,
+        success: true,
+      });
 
       return;
     }
 
-    res.send({ Error: "Team not found" });
+    res.send({ message: "Team not found", success: false });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
