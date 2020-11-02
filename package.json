@@ -1,7 +1,7 @@
 {
 	"name": "mock-league",
 	"version": "1.0.0",
-	"description": "",
+	"description": "an API that serves up fixtures of matches in a Mock Premier League, it is a curation of fictional teams and fixtures between them.",
 	"main": "index.js",
 	"scripts": {
 		"start": "node src/index.js",
@@ -11,8 +11,8 @@
 	"jest": {
 		"testEnvironment": "node"
 	},
-	"keywords": [],
-	"author": "",
+	"keywords": ["Nodejs", "JavaScript", "Rest", "API", "MongoDB", "Jest"],
+	"author": "Tosin Moronfolu",
 	"license": "ISC",
 	"dependencies": {
 		"algoliasearch": "^4.5.1",
