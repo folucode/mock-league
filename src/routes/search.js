@@ -27,7 +27,7 @@ router.get("/search/:query", async (req, res) => {
 
     res.send({
       message: "Fetched search results",
-      data: results,
+      results,
       success: true,
     });
   } catch (error) {
