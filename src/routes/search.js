@@ -21,13 +21,13 @@ router.get("/search/:query", async (req, res) => {
       },
     ];
 
-    const results = await algoliaclient.multipleQueries(queries);
+    const { results } = await algoliaclient.multipleQueries(queries);
 
     redisClient.setex(query, 3600, JSON.stringify(results));
 
     res.send({
       message: "Fetched search results",
-      results,
+      data: results,
       success: true,
     });
   } catch (error) {
