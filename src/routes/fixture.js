@@ -84,7 +84,7 @@ router.patch("/fixtures/:id/update", auth, admin, async (req, res) => {
   }
 });
 
-router.get("/fixtures/:fixture/:id", auth, async (req, res) => {
+router.get("/fixtures/:id", auth, async (req, res) => {
   const { params } = req;
 
   checkCache(params.id);
