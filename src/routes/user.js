@@ -53,15 +53,9 @@ router.get("/users/me", auth, async (req, res) => {
 router.patch("/users/me", auth, async (req, res) => {
   const { user, body } = req;
 
-  const updates = Object.keys(body);
-  const allowedUpdates = ["name", "email", "password"];
-  const isValidOperation = updates.every((update, index) =>
-    allowedUpdates.includes(update)
-  );
+  const params = ({ name, email, password } = body);
 
-  if (!isValidOperation) {
-    return res.status(400).send({ error: "Invalid updates!" });
-  }
+  const updates = Object.keys(params);
 
   try {
     updates.forEach((update) => (user[update] = body[update]));
@@ -95,7 +89,7 @@ router.post("/users/logout", auth, async (req, res) => {
 
     await req.user.save();
 
-    res.send({message: "succesfully logged out"});
+    res.send({ message: "succesfully logged out" });
   } catch (error) {
     res.status(500).send(error.message);
   }
@@ -107,7 +101,7 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 
     await req.user.save();
 
-    res.send({message: "succesfully logged out"});
+    res.send({ message: "succesfully logged out" });
   } catch (error) {
     res.status(500).send(error.message);
   }
