@@ -108,7 +108,7 @@ router.get("/fixtures/:id", auth, async (req, res) => {
 
     res.send({
       message: "Fixture successfully retrieved",
-      data: fixture,
+      data: fixtures,
       success: true,
     });
   } catch (error) {
