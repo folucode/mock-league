@@ -1,15 +1,15 @@
 const admin = (req, res, next) => {
-	try {
-		const adminUser = req.user.role === 'admin';
+  try {
+    const adminUser = req.user.role === "admin";
 
-		if (adminUser) {
-			return next();
-		}
+    if (adminUser) {
+      return next();
+    }
 
-		throw new Error('Page not found');
-	} catch (error) {
-		res.status(404).send({ error: 'Page not found' });
-	}
+    throw new Error({ message: "Unauthorized request" });
+  } catch (error) {
+    res.status(401).send({ message: error.message, success: false });
+  }
 };
 
 module.exports = admin;
