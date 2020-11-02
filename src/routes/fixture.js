@@ -116,7 +116,7 @@ router.get("/fixtures/:id", auth, async (req, res) => {
   }
 });
 
-router.get("/fixtures/:status", auth, async (req, res) => {
+router.get("/fixtures/status/:status", auth, async (req, res) => {
   const { params } = req;
 
   checkCache(params.status);
