@@ -99,7 +99,7 @@ router.get("/teams", auth, admin, async (req, res) => {
 
     res.send({
       message: "all teams retrieved sucessfully",
-      data: team,
+      data: teams,
       success: true,
     });
   } catch (error) {
