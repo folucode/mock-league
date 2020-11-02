@@ -25,9 +25,13 @@ router.post("/users/signup", async (req, res) => {
 
     const token = await user.generateAuthToken();
 
-    res.status(201).send({ user, token });
+    res.status(201).send({
+      message: "Account succesfully created",
+      data: { user, token },
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -40,14 +44,18 @@ router.post("/users/login", async (req, res) => {
 
     req.session.key = user;
 
-    res.send({ user, token });
+    res.send({
+      message: "Account succesfully logged in",
+      data: { user, token },
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
 router.get("/users/me", auth, async (req, res) => {
-  res.send(req.user);
+  res.send({ data: req.user, success: true });
 });
 
 router.patch("/users/me", auth, async (req, res) => {
@@ -58,19 +66,22 @@ router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(params);
 
   try {
+    if (!user) {
+      return res.status(401).send();
+    }
     updates.forEach((update) => (user[update] = body[update]));
 
     await user.save();
 
     await userIndex.partialUpdateObject(user);
 
-    if (!user) {
-      return res.status(404).send();
-    }
-
-    res.send(req.user);
+    res.send({
+      message: "Profile successfully updated",
+      data: req.user,
+      success: true,
+    });
   } catch (error) {
-    res.status(400).send(error.message);
+    res.status(400).send({ message: error.message, success: false });
   }
 });
 
@@ -89,9 +100,9 @@ router.post("/users/logout", auth, async (req, res) => {
 
     await req.user.save();
 
-    res.send({ message: "succesfully logged out" });
+    res.send({ message: "succesfully logged out", success: true });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
@@ -101,9 +112,9 @@ router.post("/users/logoutAll", auth, async (req, res) => {
 
     await req.user.save();
 
-    res.send({ message: "succesfully logged out" });
+    res.send({ message: "succesfully logged out", success: true });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
@@ -115,9 +126,13 @@ router.get("/users/all", auth, admin, async (req, res) => {
     const users = await User.find({});
 
     redisClient.setex("all_users", 3600, JSON.stringify(users));
-    res.send(users);
+    res.send({
+      message: "fetched all users successfully",
+      data: users,
+      success: true,
+    });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).send({ message: error.message, success: false });
   }
 });
 
