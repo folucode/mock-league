@@ -10,6 +10,7 @@ function checkCache(param) {
 
       if (data !== null) {
         res.send(JSON.parse(data));
+        return;
       } else {
         console.log('no');
         next();
